@@ -65,7 +65,7 @@ int main(void)
          }
          else if(menu_option_to_int == 2)
          {
-            read_transactions();
+            (void) read_transactions();
          }
          else if(menu_option_to_int == 3)
          {

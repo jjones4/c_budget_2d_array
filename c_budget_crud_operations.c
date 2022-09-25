@@ -45,6 +45,29 @@ void create_transaction(void)
    char *complete_transaction_string_index;
    BOOL valid_description = FALSE;
    BOOL valid_amount = FALSE;
+   int num_transactions_read = 0;
+   
+   /* First make sure our file doesn't have the maximum number of allowed transactions */
+   fp = fopen(FILE_NAME, "r");
+   while(!feof(fp)) {
+      if(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) == NULL)
+      {
+         if(num_transactions_read <= MAX_TRANSACTIONS)
+         {
+            break;
+         }
+      }
+      
+      num_transactions_read++;
+      
+      /* Too many records to display, stop */
+      if(num_transactions_read > MAX_TRANSACTIONS) {
+         printf("\nToo many records were found in the file.\n\nCannot create record.\n\n");
+         return;
+      }
+   }
+   
+   fclose(fp);
    
    /* Prompt for and validate date */
    do
@@ -162,7 +185,7 @@ void create_transaction(void)
 
 
 
-void read_transactions(void)
+int read_transactions(void)
 {
    FILE *fp;
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1];
@@ -171,13 +194,13 @@ void read_transactions(void)
    char type_string[TYPE_LENGTH + 1];
    char description_string[DESCRIPTION_LENGTH + 1];
    char *complete_transaction_string_index;
-   int num_transactions_read = 1;
+   int num_transactions_read = 0;
    
    /* Open file stream for budget data text file */
    fp = fopen(FILE_NAME, "r");
    if(fp == NULL) {
       printf("Can't open %s\n", FILE_NAME);
-      return;
+      return -1;
    }
    
    printf("%-10s\t%-11s\t%-10s\t%-5s\t%-50s\n", "Id", "Date", "Amount", "Type", "Description");
@@ -185,31 +208,41 @@ void read_transactions(void)
    
    while(!feof(fp)) {
       
-      /* Too many records to display, stop */
-      if(num_transactions_read > MAX_TRANSACTIONS) {
-         printf("Too many records\n");
-         return;
-      }
       
       if(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) == NULL)
       {
-         return;
+         fclose(fp);
+         return num_transactions_read;
       }
       
-      /* Keep track of our position as we read from the complete_transaction_string array */
-      complete_transaction_string_index = complete_transaction_string;
-   
-      complete_transaction_string_index = parse_transaction_string(date_string, complete_transaction_string_index);
-      complete_transaction_string_index = parse_transaction_string(amount_string, complete_transaction_string_index);
-      complete_transaction_string_index = parse_transaction_string(type_string, complete_transaction_string_index);
-      complete_transaction_string_index = parse_transaction_string(description_string, complete_transaction_string_index);
-      
-      printf("%10d\t%-11s\t%10s\t%5s\t%-50s\n", num_transactions_read, date_string, amount_string, type_string, description_string);
-      
       num_transactions_read++;
+      
+      /* Too many records to display, stop */
+      if(num_transactions_read > MAX_TRANSACTIONS)
+      {
+         fclose(fp);
+         printf("\nToo many records were found in the file.\n");
+         return num_transactions_read;
+      }
+      else
+      {
+         /* Keep track of our position as we read from the complete_transaction_string array */
+         complete_transaction_string_index = complete_transaction_string;
+   
+         complete_transaction_string_index = parse_transaction_string(date_string, complete_transaction_string_index);
+         complete_transaction_string_index = parse_transaction_string(amount_string, complete_transaction_string_index);
+         complete_transaction_string_index = parse_transaction_string(type_string, complete_transaction_string_index);
+         complete_transaction_string_index = parse_transaction_string(description_string, complete_transaction_string_index);
+      
+         printf("%10d\t%-11s\t%10s\t%5s\t%-50s\n", num_transactions_read, date_string, amount_string, type_string, description_string);
+      }
+      
+      
    }
    
    fclose(fp);
+
+   return num_transactions_read;
 }
 
 
@@ -245,32 +278,17 @@ void update_transaction(void)
       return;
    }
    
-   /* Go through the file to get the number of transactions
-    * so we can make sure the user enters a valid ID
-    * that is within the range of the number of transactions
-    */
-   while(!feof(fp)) {
-
-      /* Too many records, stop */
-      if(num_transactions_read > MAX_TRANSACTIONS) {
-         printf("Too many records\n");
-         return;
-      }
-      
-      if(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) == NULL)
-      {
-         break;
-      }
-      
-      num_transactions_read++;
-   }
-   
-   fclose(fp);
-
    do
    {
       /* Display the transactions so the user can select one to edit */
-      read_transactions();
+      num_transactions_read = read_transactions();
+      
+      /* Too many records to display, stop */
+      if(num_transactions_read > MAX_TRANSACTIONS)
+      {
+         printf("\nCannot update record.\n");
+         return;
+      }
    
       printf("\nType the ID of the transaction you would like to edit. Enter \"b\" to go back: ");
       
@@ -300,7 +318,6 @@ void update_transaction(void)
     * of the ID that the user gave. We will store this lilne
     * in the complete_transaction_string
     */
-   num_transactions_read = 0;
    
    /* Open file stream for budget data text file */
    fp = fopen(FILE_NAME, "r");
@@ -310,14 +327,8 @@ void update_transaction(void)
       return;
    }
    
-   while(!feof(fp)) {
-
-      /* Too many records, stop */
-      if(num_transactions_read > MAX_TRANSACTIONS) {
-         printf("Too many records\n");
-         return;
-      }
-      
+   while(!feof(fp))
+   {
       if(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) == NULL)
       {
          printf("\n\n\n%s\n\n\n", complete_transaction_string);
@@ -328,8 +339,6 @@ void update_transaction(void)
       {
          break;
       }
-      
-      num_transactions_read++;
    }
 
    fclose(fp);
@@ -540,43 +549,28 @@ void delete_transaction(void)
    BOOL valid_yes_no = FALSE;
    
    int num_transactions_read = 0;
+   int line_number = 0;
    int id = 0;
    
    /* Open file stream for budget data text file */
    fp = fopen(FILE_NAME, "r");
+   
    if(fp == NULL)
    {
       printf("Can't open %s\n", FILE_NAME);
       return;
    }
    
-   /* Go through the file to get the number of transactions
-    * so we can make sure the user enters a valid ID
-    * that is within the range of the number of transactions
-    */
-   while(!feof(fp)) {
-
-      /* Too many records, stop */
-      if(num_transactions_read > MAX_TRANSACTIONS)
-      {
-         printf("Too many records\n");
-         return;
-      }
-      
-      if(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) == NULL)
-      {
-         break;
-      }
-      
-      num_transactions_read++;
-   }
-   
-   fclose(fp);
-   
    do
    {
       /* Display the transactions so the user can select one to edit */
-      read_transactions();
+      int num_transactions_read = read_transactions();
+      
+      /* Too many records to display, stop */
+      if(num_transactions_read > MAX_TRANSACTIONS) {
+         printf("\nCannot delete record.\n");
+         return;
+      }
    
       printf("\nType the ID of the transaction you would like to delete. Enter \"b\" to go back: ");
       
@@ -584,6 +578,7 @@ void delete_transaction(void)
       
       if(*id_string == 'b' || *id_string == 'B')
       {
+         fclose(fp);
          printf("\nTransaction has been successfully discarded.\n");
          return;
       }
@@ -606,7 +601,7 @@ void delete_transaction(void)
    {
       printf("\nAre you sure you want to delete record %d (Y/y or N/n): ", id);
       
-      (void) read_menu_input(menu_string);
+      read_menu_input(menu_string);
       
       if(
          (*menu_string != 'y' && *menu_string != 'Y')
@@ -632,21 +627,13 @@ void delete_transaction(void)
     
       /* Open temp file stream for budget data text file */
       temp_pointer = fopen(TEMP_FILE_NAME, "w");
-      if(temp_pointer == NULL) {
+      if(temp_pointer == NULL)
+      {
+         fclose(fp);
          printf("Can't open %s\n", TEMP_FILE_NAME);
          return;
       }
-   
-      /* Open original file stream for budget data text file */
-      fp = fopen(FILE_NAME, "r");
-      if(fp == NULL)
-      {
-         printf("Can't open %s\n", FILE_NAME);
-         return;
-      }
-   
-      num_transactions_read = 0;
-   
+      
       while(!feof(fp)) {
       
          /* Too many records to display, stop */
@@ -660,8 +647,11 @@ void delete_transaction(void)
          {
             break;
          }
-      
-         if(num_transactions_read == id - 1)
+         
+         line_number++;
+         
+         /* Skipe the record we are deleting, so it isn't written to the temp file */
+         if(line_number == id)
          {
             num_transactions_read++;
             continue;
@@ -670,8 +660,6 @@ void delete_transaction(void)
          {
             fprintf(temp_pointer, "%s", complete_transaction_string);
          }
-      
-         num_transactions_read++;
       }
       
       fclose(temp_pointer);

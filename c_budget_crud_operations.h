@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 void create_transaction(void);
-void read_transactions(void);
+int read_transactions(void);
 void update_transaction(void);
 void delete_transaction(void);
 
