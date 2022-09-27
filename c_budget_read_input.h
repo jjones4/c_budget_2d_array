@@ -30,9 +30,10 @@
 
 /* Don't allow Ids greater than 999,999 (six digits) */
 #define ID_INPUT_LENGTH 6
-
 #define MENU_INPUT_LENGTH 3
 
+/* Define an integer for file operation errors */
+#define FILE_OPS_ERROR -10
 
 void read_menu_input(char *menu_string);
 void read_id_input(char *id_string);

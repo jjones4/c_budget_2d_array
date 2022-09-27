@@ -50,9 +50,10 @@ void create_transaction(void)
    /* First make sure our file doesn't have the maximum number of allowed transactions */
    fp = fopen(FILE_NAME, "r");
    while(!feof(fp)) {
+      
       if(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) == NULL)
       {
-         if(num_transactions_read <= MAX_TRANSACTIONS)
+         if(num_transactions_read <= MAX_TRANSACTIONS - 1)
          {
             break;
          }
@@ -61,7 +62,7 @@ void create_transaction(void)
       num_transactions_read++;
       
       /* Too many records to display, stop */
-      if(num_transactions_read > MAX_TRANSACTIONS) {
+      if(num_transactions_read >= MAX_TRANSACTIONS) {
          printf("\nToo many records were found in the file.\n\nCannot create record.\n\n");
          return;
       }
