@@ -42,7 +42,7 @@ void display_main_menu(void)
    printf("\t(2) Display Your Budget\n");
    printf("\t(3) Update an Existing Record\n");
    printf("\t(4) Delete a Record\n");
-   printf("\t(5) Quit\n");
+   printf("\t(5) Save and Quit\n");
    printf("\n    Type your option: ");
 }
 

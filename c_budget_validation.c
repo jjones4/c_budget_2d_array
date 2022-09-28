@@ -4,14 +4,15 @@
  *
  * Purpose:    Contains functions for validating user input.
  *
-
+ *
  * Author:     jjones4
  *
  * Copyright (c) 2022 Jerad Jones
- * This file is part of c_budget.  c_budget may be freely distributed
- * under the MIT license.  For all details and documentation, see
- 
- * https://github.com/jjones4/c_budget
+ * This file is part of c_budget_2d_array.  c_budget_2d_array may be
+ * freely distributed under the MIT license.  For all details and
+ * documentation, see
+ *
+ * https://github.com/jjones4/c_budget_2d_array
  *
  */
 
@@ -22,6 +23,7 @@
  * Preprocessing directives
  *
  */
+#include "c_budget_read_input.h"
 #include "c_budget_validation.h"
 
 
@@ -29,16 +31,16 @@
 /*
  *
  * Checks if the user typed a valid option
- * from the main menu
+ * from a menu
  *
- * Note that the main menu input buffer can handle two characters,
+ * Note that the menu input buffer can handle two characters,
  * so we can go up to 99 options
  */
 BOOL is_valid_main_menu_option(const char *input)
 {
    BOOL valid_input = FALSE;
 
-   if( (atoi(input)) > 0 && (atoi(input)) < 6)
+   if( (atoi(input)) > 0 && (atoi(input)) < NUM_MAIN_MENU_OPTIONS)
    {
       valid_input = TRUE;
    }
@@ -53,14 +55,14 @@ BOOL is_valid_main_menu_option(const char *input)
  * Checks if the user typed a valid option
  * from the update record menu
  *
- * Note that the update menu input buffer can handle two characters,
+ * Note that the menu input buffer can handle two characters,
  * so we can go up to 99 options
  */
 BOOL is_valid_update_menu_option(const char *input)
 {
    BOOL valid_input = FALSE;
 
-   if( (atoi(input)) > 0 && (atoi(input)) < 6)
+   if( (atoi(input)) > 0 && (atoi(input)) < NUM_UPDATE_MENU_OPTIONS)
    {
       valid_input = TRUE;
    }

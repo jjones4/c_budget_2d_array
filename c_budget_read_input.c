@@ -8,10 +8,11 @@
  * Author:     jjones4
  *
  * Copyright (c) 2022 Jerad Jones
- * This file is part of c_budget.  c_budget may be freely distributed
- * under the MIT license.  For all details and documentation, see
- 
- * https://github.com/jjones4/c_budget
+ * This file is part of c_budget_2d_array.  c_budget_2d_array may be
+ * freely distributed under the MIT license.  For all details and
+ * documentation, see
+ *
+ * https://github.com/jjones4/c_budget_2d_array
  *
  */
 
@@ -41,7 +42,7 @@ void clear_buffer(char *buff);
  * IMPORTANT NOTE:
  *
  * I have created separate functions for
- * each type of user input (main menu, date, amount,
+ * each type of user input (menu, date, amount,
  * type of transaction, and description).
  *
  * This is because I want a different buffer size for each
@@ -53,26 +54,43 @@ void clear_buffer(char *buff);
 
 /*
  *
- * Reads the main menu input
+ * Reads menu input
  *
  */
-void read_menu_input(char *input_string)
+int read_menu_input(char *input_string)
 {
    char buff[MENU_INPUT_LENGTH + 1];
+   char *p;
    
    if (fgets(buff, MENU_INPUT_LENGTH + 1, stdin))
    {
       strcpy(input_string, buff);
       
-      input_string[MENU_INPUT_LENGTH] = '\0';
+      /*
+       * If fgets left a new line in the string (because it reached a
+       * new line before the maximum buffer length was reached)
+       * replace the new line character with the null character.
+       */
+      p = input_string;
+      while(*p)
+      {
+         if(*p == '\n')
+         {
+            *p = '\0';
+         }
+         
+         p++;
+      }
       
       clear_buffer(buff);
+      
+      return 0;
    }
    else
    {
-      printf("\nAn error occurred while attempting to read the input.\n");
-      
       clear_buffer(buff);
+      
+      return -10;
    }
 }
 

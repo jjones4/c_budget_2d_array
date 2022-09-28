@@ -1,5 +1,24 @@
 /*
  *
+ * Name:       c_budget_read_input.h
+ *
+ * Purpose:    Define macros and function prototypes for data input.
+ *
+ * Author:     jjones4
+ *
+ * Copyright (c) 2022 Jerad Jones
+ * This file is part of c_budget_2d_array.  c_budget_2d_array may be
+ * freely distributed under the MIT license.  For all details and
+ * documentation, see
+ *
+ * https://github.com/jjones4/c_budget_2d_array
+ *
+ */
+
+
+
+/*
+ *
  * Function Prototypes
  *
  */
@@ -30,12 +49,15 @@
 
 /* Don't allow Ids greater than 999,999 (six digits) */
 #define ID_INPUT_LENGTH 6
-#define MENU_INPUT_LENGTH 3
+
+#define MENU_INPUT_LENGTH 2
+#define NUM_MAIN_MENU_OPTIONS 6
+#define NUM_UPDATE_MENU_OPTIONS 6
 
 /* Define an integer for file operation errors */
 #define FILE_OPS_ERROR -10
 
-void read_menu_input(char *menu_string);
+int read_menu_input(char *menu_string);
 void read_id_input(char *id_string);
 void read_date_input(char *date_string);
 void read_amount_input(char *amount_string);
