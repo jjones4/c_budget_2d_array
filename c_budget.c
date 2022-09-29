@@ -48,18 +48,19 @@ int main(void)
    char complete_budget[MAX_TRANSACTIONS][MAX_TRANSACTION_LENGTH + 1] = {0};
    char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
    char main_menu_input_string[MENU_INPUT_LENGTH + 1];
-   int num_transactions_read = 0;
+   int number_of_transactions = 0;
    int menu_option_to_int;
    int read_input_return_code;
    
    /*
     * Check for the existence of budget.txt
     * Terminate if can't open for reading.
+    * Otherwise, open the file and get the number of transactions in it.
     */
    fp = fopen(FILE_NAME, "r");
    if(fp == NULL)
    {
-      printf("\n   File error.\n\n");
+      printf("\nFile error.\n\n");
       printf("Please ensure %s exists, and try again.\n\n", FILE_NAME);
       return EXIT_FAILURE;
    }
@@ -72,29 +73,29 @@ int main(void)
    while(
       fgets
          (complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) != NULL
-      && num_transactions_read < MAX_TRANSACTIONS + 1)
+      && number_of_transactions < MAX_TRANSACTIONS + 1)
    {
       /*
        * If we are able to read one transaction above the max, then the file
        * is too big. I'm defining this as a critical error since the program
        * deletes the original file in the Create(), Delete(), and Update()
-       * functions and replaces the file data up to (only) the maximum number
+       * functions and replaces the file's data up to (only) the maximum number
        * of transactions defined in THIS application. I don't want to allow
        * the possibility for the user to run this program on a large budget
        * file and possibly lose their data.
        */
-      if(num_transactions_read > MAX_TRANSACTIONS - 1)
+      if(number_of_transactions > MAX_TRANSACTIONS - 1)
       {
-         printf("\n   There is too much data in the file to read.\n\n");
-         printf("   The program will exit.\n\n");
+         printf("\nThere is too much data in the file to read.\n\n");
+         printf("The program will exit.\n\n");
          return EXIT_FAILURE;
       }
       
       /* Put the current line of the text file into our 2d array */
-      strcpy(complete_budget[num_transactions_read],
+      strcpy(complete_budget[number_of_transactions],
          complete_transaction_string);
          
-      num_transactions_read++;
+      number_of_transactions++;
    }
    
    fclose(fp);
@@ -122,10 +123,20 @@ int main(void)
          
          if(menu_option_to_int == 1)
          {
-            printf("\n\nCreate\n\n");
-            /* TODO - test to make sure we can open the file for writing before
-            calling Create()
-            create_transaction();  */
+            /* 
+             * Make sure that the number of transactions in our file is LESS
+             * than the total number of allowed transactions; otherwise,
+             * we can't add a transaction if the file is maxed out.
+             */
+            if(number_of_transactions < MAX_TRANSACTIONS)
+            {
+               number_of_transactions = create_transaction(&number_of_transactions, *complete_budget);
+            }
+            else
+            {
+               printf("\n\nThe file contains the max number of transactions.\n");
+               printf("\nWe cannot add any more transactions.\n");
+            }
          }
          else if(menu_option_to_int == 2)
          {

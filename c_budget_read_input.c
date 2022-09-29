@@ -101,23 +101,40 @@ int read_menu_input(char *input_string)
  * Reads input for the ID of a transaction
  *
  */
-void read_id_input(char *input_string)
+int read_id_input(char *input_string)
 {
    char buff[ID_INPUT_LENGTH + 1];
+   char *p;
    
    if (fgets(buff, ID_INPUT_LENGTH + 1, stdin))
    {
       strcpy(input_string, buff);
       
-      input_string[ID_INPUT_LENGTH] = '\0';
+      /*
+       * If fgets left a new line in the string (because it reached a
+       * new line before the maximum buffer length was reached)
+       * replace the new line character with the null character.
+       */
+      p = input_string;
+      while(*p)
+      {
+         if(*p == '\n')
+         {
+            *p = '\0';
+         }
+         
+         p++;
+      }
       
       clear_buffer(buff);
+      
+      return 0;
    }
    else
    {
-      printf("\nAn error occurred while attempting to read the input.\n");
-      
       clear_buffer(buff);
+      
+      return -10;
    }
 }
 
@@ -128,23 +145,40 @@ void read_id_input(char *input_string)
  * Reads input for the date
  *
  */
-void read_date_input(char *input_string)
+int read_date_input(char *input_string)
 {
    char buff[DATE_LENGTH + 1];
+   char *p;
    
    if (fgets(buff, DATE_LENGTH + 1, stdin))
    {
       strcpy(input_string, buff);
       
-      input_string[DATE_LENGTH] = '\0';
+      /*
+       * If fgets left a new line in the string (because it reached a
+       * new line before the maximum buffer length was reached)
+       * replace the new line character with the null character.
+       */
+      p = input_string;
+      while(*p)
+      {
+         if(*p == '\n')
+         {
+            *p = '\0';
+         }
+         
+         p++;
+      }
       
       clear_buffer(buff);
+      
+      return 0;
    }
    else
    {
-      printf("\nAn error occurred while attempting to read the input.\n");
-      
       clear_buffer(buff);
+      
+      return -10;
    }
 }
 
@@ -155,23 +189,40 @@ void read_date_input(char *input_string)
  * Reads input for the amount
  *
  */
-void read_amount_input(char *amount_input_string)
+int read_amount_input(char *input_string)
 {
    char buff[AMOUNT_LENGTH + 1];
+   char *p;
    
    if (fgets(buff, AMOUNT_LENGTH + 1, stdin))
    {
-      strcpy(amount_input_string, buff);
+      strcpy(input_string, buff);
       
-      amount_input_string[AMOUNT_LENGTH] = '\0';
+      /*
+       * If fgets left a new line in the string (because it reached a
+       * new line before the maximum buffer length was reached)
+       * replace the new line character with the null character.
+       */
+      p = input_string;
+      while(*p)
+      {
+         if(*p == '\n')
+         {
+            *p = '\0';
+         }
+         
+         p++;
+      }
       
       clear_buffer(buff);
+      
+      return 0;
    }
    else
    {
-      printf("\nAn error occurred while attempting to read the input.\n");
-      
       clear_buffer(buff);
+      
+      return -10;
    }
 }
 
@@ -182,23 +233,40 @@ void read_amount_input(char *amount_input_string)
  * Reads input for the type (credit or debit)
  *
  */
-void read_type_input(char *input_string)
+int read_type_input(char *input_string)
 {
    char buff[TYPE_LENGTH + 1];
+   char *p;
    
    if (fgets(buff, TYPE_LENGTH + 1, stdin))
    {
       strcpy(input_string, buff);
       
-      input_string[TYPE_LENGTH] = '\0';
+      /*
+       * If fgets left a new line in the string (because it reached a
+       * new line before the maximum buffer length was reached)
+       * replace the new line character with the null character.
+       */
+      p = input_string;
+      while(*p)
+      {
+         if(*p == '\n')
+         {
+            *p = '\0';
+         }
+         
+         p++;
+      }
       
       clear_buffer(buff);
+      
+      return 0;
    }
    else
    {
-      printf("\nAn error occurred while attempting to read the input.\n");
-      
       clear_buffer(buff);
+      
+      return -10;
    }
 }
 
@@ -209,23 +277,40 @@ void read_type_input(char *input_string)
  * Reads input for the description
  *
  */
-void read_description_input(char *input_string)
+int read_description_input(char *input_string)
 {
    char buff[DESCRIPTION_LENGTH + 1];
+   char *p;
    
    if (fgets(buff, DESCRIPTION_LENGTH + 1, stdin))
    {
       strcpy(input_string, buff);
       
-      input_string[DESCRIPTION_LENGTH] = '\0';
+      /*
+       * If fgets left a new line in the string (because it reached a
+       * new line before the maximum buffer length was reached)
+       * replace the new line character with the null character.
+       */
+      p = input_string;
+      while(*p)
+      {
+         if(*p == '\n')
+         {
+            *p = '\0';
+         }
+         
+         p++;
+      }
       
       clear_buffer(buff);
+      
+      return 0;
    }
    else
    {
-      printf("\nAn error occurred while attempting to read the input.\n");
-      
       clear_buffer(buff);
+      
+      return -10;
    }
 }
 

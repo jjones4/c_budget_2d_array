@@ -39,6 +39,7 @@
 #define TEMP_FILE_NAME "temp_budget.txt"
 
 #define MAX_TRANSACTIONS 10
+#define MAX_YEAR 3000
 
 /* Set lengths for a transaction and for each part of a transaction */
 #define MAX_TRANSACTION_LENGTH 250
@@ -58,11 +59,11 @@
 #define FILE_OPS_ERROR -10
 
 int read_menu_input(char *menu_string);
-void read_id_input(char *id_string);
-void read_date_input(char *date_string);
-void read_amount_input(char *amount_string);
-void read_type_input(char *type_string);
-void read_description_input(char *description_string);
+int read_id_input(char *id_string);
+int read_date_input(char *date_string);
+int read_amount_input(char *amount_string);
+int read_type_input(char *type_string);
+int read_description_input(char *description_string);
 
 
 

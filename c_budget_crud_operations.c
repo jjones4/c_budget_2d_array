@@ -34,41 +34,28 @@ char *parse_transaction_string(char *transaction_field, char *complete_transacti
 
 
 
-void create_transaction(void)
+int create_transaction(int *number_of_transactions, char complete_budget[MAX_TRANSACTION_LENGTH + 1])
 {
    FILE *fp;
-   char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1];
+   int i, j;
+   char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
    char date_string[DATE_LENGTH + 1];
    char amount_string[AMOUNT_LENGTH + 1];
    char type_string[TYPE_LENGTH + 1];
    char description_string[DESCRIPTION_LENGTH + 1];
-   char *complete_transaction_string_index;
-   BOOL valid_description = FALSE;
-   BOOL valid_amount = FALSE;
-   int num_transactions_read = 0;
+   BOOL valid_amount = FALSE, valid_description = FALSE;
    
-   /* First make sure our file doesn't have the maximum number of allowed transactions */
-   fp = fopen(FILE_NAME, "r");
-   while(!feof(fp)) {
-      
-      if(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) == NULL)
-      {
-         if(num_transactions_read <= MAX_TRANSACTIONS - 1)
-         {
-            break;
-         }
-      }
-      
-      num_transactions_read++;
-      
-      /* Too many records to display, stop */
-      if(num_transactions_read >= MAX_TRANSACTIONS) {
-         printf("\nToo many records were found in the file.\n\nCannot create record.\n\n");
-         return;
-      }
+   /*
+    * Check for the existence of budget.txt
+    * Terminate if can't open for appending.
+    */
+   fp = fopen(FILE_NAME, "a+");
+   if(fp == NULL)
+   {
+      printf("\n   File error.\n\n");
+      printf("   Please ensure %s exists, and try again.\n\n", FILE_NAME);
+      exit(EXIT_FAILURE);
    }
-   
-   fclose(fp);
    
    /* Prompt for and validate date */
    do
@@ -79,7 +66,7 @@ void create_transaction(void)
       if(*date_string == 'b' || *date_string == 'B')
       {
          printf("\nTransaction has been successfully discarded.\n");
-         return;
+         return *number_of_transactions;
       }
       
       if(!is_valid_date(date_string))
@@ -98,7 +85,7 @@ void create_transaction(void)
       if(*amount_string == 'b' || *amount_string == 'B')
       {
          printf("\nTransaction has been successfully discarded.\n");
-         return;
+         return *number_of_transactions;
       }
 
       valid_amount = is_valid_amount(amount_string);
@@ -118,7 +105,7 @@ void create_transaction(void)
       if(*type_string == 'b' || *type_string == 'B')
       {
          printf("\nTransaction has been successfully discarded.\n");
-         return;
+         return *number_of_transactions;
       }
 
       if(!is_valid_type(type_string))
@@ -136,7 +123,7 @@ void create_transaction(void)
       if(*description_string == 'b' || *description_string == 'B')
       {
          printf("\nTransaction has been successfully discarded.\n");
-         return;
+         return *number_of_transactions;
       }
 
       valid_description = is_valid_description(description_string);
@@ -147,41 +134,37 @@ void create_transaction(void)
       }
    } while(!valid_description);
    
+   strcpy(complete_transaction_string, date_string);
+   strcat(complete_transaction_string, "|");
+   strcat(complete_transaction_string, amount_string);
+   strcat(complete_transaction_string, "|");
+   strcat(complete_transaction_string, type_string);
+   strcat(complete_transaction_string, "|");
+   strcat(complete_transaction_string, description_string);
+   strcat(complete_transaction_string, "|");
+   
+   /* Put the new transaction into the 2d array as the last element */
+   strcpy(complete_budget + *number_of_transactions * (MAX_TRANSACTION_LENGTH + 1),
+      complete_transaction_string);
+   
+   /* Hancy code for looping through our 2d array */
    /*
-    *
-    * Loop through each of our transaction items,
-    * i.e., date, amount, type, and description.
-    * Store in the complete transaction array.
-    * Write the line to the budget.txt file.
-    *
-    */
-   
-   /* Keep track of our position as we fill the complete_transaction_string array */
-   complete_transaction_string_index = complete_transaction_string;
- 
-   complete_transaction_string_index = build_transaction_string(date_string, complete_transaction_string_index);
-   complete_transaction_string_index = build_transaction_string(amount_string, complete_transaction_string_index);
-   complete_transaction_string_index = build_transaction_string(type_string, complete_transaction_string_index);
-   complete_transaction_string_index = build_transaction_string(description_string, complete_transaction_string_index);
-   
-   *complete_transaction_string_index = '\n';
-   complete_transaction_string_index++;
-   *complete_transaction_string_index = '\0';
-   
-   printf("\nComplete transaction string: %s\n", complete_transaction_string);
-   
-   /* Open file stream for budget data text file */
-   fp = fopen(FILE_NAME, "a+");
-   if(fp == NULL) {
-      printf("Can't open %s\n", FILE_NAME);
-      return;
+   for(j = 0, i = 0; i < (*number_of_transactions + 1) * (MAX_TRANSACTION_LENGTH + 1);)
+   {
+      printf("\nRecord %d: %s\n", *number_of_transactions, complete_budget + i);
+      j++;
+      i += (MAX_TRANSACTION_LENGTH + 1);
    }
+   */
    
    /* Write record to budget.txt */
    fprintf(fp, "%s", complete_transaction_string);
    fclose(fp);
    
    printf("\nRecord was successfully added.\n");
+   
+   (*number_of_transactions)++;
+   return *number_of_transactions;
 }
 
 

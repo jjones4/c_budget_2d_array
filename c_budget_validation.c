@@ -106,7 +106,7 @@ BOOL is_valid_date(char *date_string)
    }
    
    /* If we don't have exactly two slashes in the date string,
-    * we know the date is invalid */
+    * the date is invalid */
    if(counter != 2)
    {
       return FALSE;
@@ -127,12 +127,12 @@ BOOL is_valid_date(char *date_string)
       counter++;
    }
    
-   /* Check that the slashes are at the correct index
-    * Either (1,3) (1,4) (2,4) or (2,5) */
-   if( (slash_indeces[0] != 1 || slash_indeces[1] != 3) &&
-       (slash_indeces[0] != 1 || slash_indeces[1] != 4) &&
-       (slash_indeces[0] != 2 || slash_indeces[1] != 4) &&
-       (slash_indeces[0] != 2 || slash_indeces[1] != 5)
+   /* Check that the slashes are at the correct index in the
+    * string. Either (1,3) (1,4) (2,4) or (2,5) */
+   if( (*slash_indeces != 1 || *(slash_indeces + 1) != 3) &&
+       (*slash_indeces != 1 || *(slash_indeces + 1) != 4) &&
+       (*slash_indeces != 2 || *(slash_indeces + 1) != 4) &&
+       (*slash_indeces != 2 || *(slash_indeces + 1) != 5)
      )
    {
       return FALSE;
@@ -142,30 +142,30 @@ BOOL is_valid_date(char *date_string)
    p = date_string;
    for(i = 0; i < slash_indeces[0]; i++)
    {
-      month_str[i] = *p;
+      *(month_str + i) = *p;
       p++;
    }
-   month_str[i] = '\0';
+   *(month_str + i) = '\0';
    p++;
    
    /* Fill the day_string array with the characters for the day */
-   for(j = 0, i = slash_indeces[0] + 1; i < slash_indeces[1]; i++)
+   for(j = 0, i = *slash_indeces + 1; i < *(slash_indeces + 1); i++)
    {
-      day_str[j] = *p;
+      *(day_str + j) = *p;
       j++;
       p++;
    }
-   day_str[j] = '\0';
+   *(day_str + j) = '\0';
    p++;
    
    /* Fill the year_string array with the characters for the year */
-   for(j = 0, i = slash_indeces[1] + 1; i < slash_indeces[1] + 5; i++)
+   for(j = 0, i = *(slash_indeces + 1) + 1; i < *(slash_indeces + 1) + 5; i++)
    {
-      year_str[j] = *p;
+      *(year_str + j) = *p;
       j++;
       p++;
    }
-   year_str[j] = '\0';
+   *(year_str + j) = '\0';
    p++;
    
    /* Convert month, day and year to integers for testing */
@@ -222,7 +222,7 @@ BOOL is_valid_date(char *date_string)
    }
    
    /* Check to make sure our years are within a reasonable range */
-   if(year > 0 && year < 3000)
+   if(year > 0 && year < MAX_YEAR)
    {
       valid_year = TRUE;
    }
@@ -235,7 +235,7 @@ BOOL is_valid_date(char *date_string)
    
    /* null terminate the string in case it's shorter than the origan input */
    /* Otherwise, it will contain the new line from the original input */
-   date_string[slash_indeces[1] + 5] = '\0';
+   date_string[*(slash_indeces + 1) + 5] = '\0';
    
    return valid_date;
 }
@@ -295,7 +295,7 @@ BOOL is_valid_amount(char *amount_string)
     * the decimal follows the leading zero.
     * Prevents something like $01.00
     */
-   if(amount_string[0] == '0' && amount_string[1] != '.')
+   if(*amount_string == '0' && *(amount_string + 1) != '.')
    {
       valid_leading_zero = FALSE;
    }
@@ -334,10 +334,6 @@ BOOL is_valid_amount(char *amount_string)
    /* null terminate the string in case it's shorter than the origan input */
    /* Otherwise, it will contain the new line from the original input */
    amount_string[decimal_index + 3] = '\0';
-   
-   printf("\nValid decimal counter: %d\n", valid_decimal_count);
-   printf("\nValid leading zero: %d\n", valid_leading_zero);
-   printf("\nValid digits: %d\n", valid_digits);
    
    if(
       (valid_decimal_count == TRUE) && (valid_leading_zero == TRUE)
@@ -394,7 +390,7 @@ BOOL is_valid_description(char *description_string)
       counter++;
    }
    
-   description_string[counter - 1] = '\0';
+   *(description_string + counter) = '\0';
    
    valid_input = TRUE;
    
