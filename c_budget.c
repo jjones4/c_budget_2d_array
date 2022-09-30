@@ -111,7 +111,7 @@ int main(void)
       {
          printf("\nThere was an error reading your input.\n\n");
          printf("Please try again.\n\n");
-         continue;
+         return EXIT_FAILURE;
       }
       
       printf("\n");
@@ -124,13 +124,14 @@ int main(void)
          if(menu_option_to_int == 1)
          {
             /* 
-             * Make sure that the number of transactions in our file is LESS
+             * Make sure the number of transactions in our file is LESS
              * than the total number of allowed transactions; otherwise,
              * we can't add a transaction if the file is maxed out.
              */
             if(number_of_transactions < MAX_TRANSACTIONS)
             {
-               number_of_transactions = create_transaction(&number_of_transactions, *complete_budget);
+               number_of_transactions = create_transaction(&number_of_transactions,
+                  *complete_budget);
             }
             else
             {
@@ -140,24 +141,36 @@ int main(void)
          }
          else if(menu_option_to_int == 2)
          {
-            printf("\n\nRead\n\n");
-            /* TODO - test to make sure we can open the file for reading before
-            calling Read()
-            (void) read_transactions(); */
+            number_of_transactions =
+                  read_transactions(&number_of_transactions, *complete_budget);
          }
          else if(menu_option_to_int == 3)
          {
-            printf("\n\nUpdate\n\n");
-            /* TODO - test to make sure we can open the file for writing before
-            calling Update()
-            update_transaction(); */
+            /* Check to make sure we have transactions to edit in the file */
+            if(number_of_transactions < 1)
+            {
+               printf("\nNo transactions were found in the file to edit.\n");
+               printf("\nPlease create a transaction first.\n");
+            }
+            else
+            {
+               number_of_transactions =
+                  update_transaction(&number_of_transactions, *complete_budget);
+            }
          }
          else if(menu_option_to_int == 4)
          {
-            printf("\n\nDelete\n\n");
-            /* TODO - test to make sure we can open the file for writing before
-            calling Delete()
-            delete_transaction(); */
+            /* Check to make sure we have transactions to delete in the file */
+            if(number_of_transactions < 1)
+            {
+               printf("\nNo transactions were found in the file to delete.\n");
+               printf("\nPlease create a transaction first.\n");
+            }
+            else
+            {
+               number_of_transactions =
+                  delete_transaction(&number_of_transactions, *complete_budget);
+            }
          }
          else if(menu_option_to_int == 5)
          {
