@@ -20,6 +20,6 @@ I plan to use various data structures to improve c_budget. I am rebuilding c_bud
 5. c_budget_linked_list
 6. c_budget_ordered_list
 
-Also, you can compile c_budget on Windows using the followign command:
+Also, you can compile c_budget on Windows using the following command:
 
 - cl -W4 c_budget c_budget.c c_budget_crud_operations.c c_budget_menus.c c_budget_read_input.c c_budget_validation.c -link -out:c_budget.exe
