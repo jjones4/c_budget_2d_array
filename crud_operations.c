@@ -142,6 +142,7 @@ int create_transaction(int *number_of_transactions, char complete_budget[MAX_TRA
    strcat(complete_transaction_string, "|");
    strcat(complete_transaction_string, description_string);
    strcat(complete_transaction_string, "|");
+   strcat(complete_transaction_string, "\n");
    
    /* Put the new transaction into the 2d array as the last element */
    strcpy(complete_budget + *number_of_transactions * (MAX_TRANSACTION_LENGTH + 1),
@@ -179,10 +180,6 @@ int read_transactions(int *number_of_transactions, char complete_budget[MAX_TRAN
    char *transaction_string_index;
    int i, j;
    
-   /*
-    * Check for the existence of budget.txt
-    * Terminate if can't open for reading.
-    */
    fp = fopen(FILE_NAME, "a+");
    if(fp == NULL)
    {
@@ -212,6 +209,8 @@ int read_transactions(int *number_of_transactions, char complete_budget[MAX_TRAN
       j++;
       i += (MAX_TRANSACTION_LENGTH + 1);
    }
+
+   fclose(fp);
    
    return *number_of_transactions;
 }
@@ -514,7 +513,7 @@ int delete_transaction(int *number_of_transactions, char complete_budget[MAX_TRA
       /* Remove the deleted transaction from the 2d array */
       for(i = 0; i < *number_of_transactions; i++)
       {
-         if(i >= *number_of_transactions)
+         if(i >= id - 1)
          {
             strcpy(complete_budget + (i * (MAX_TRANSACTION_LENGTH + 1)), complete_budget + ((i + 1) * (MAX_TRANSACTION_LENGTH + 1)));
          }
