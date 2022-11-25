@@ -1,17 +1,19 @@
 /*
  *
- * Name:       c_budget_menus.c
+ * Name:       menus.c
  *
- * Purpose:    Contains functions for showing c_budget's menus to the user.
+ * Purpose:    Contains functions for showing c_budget_2d_array's menus 
+ * to the user.
  *
 
  * Author:     jjones4
  *
  * Copyright (c) 2022 Jerad Jones
- * This file is part of c_budget.  c_budget may be freely distributed
- * under the MIT license.  For all details and documentation, see
+ * This file is part of c_budget_2d_array.  c_budget_2d_array may 
+ * be freely distributed under the MIT license.  For all details 
+ * and documentation, see
  
- * https://github.com/jjones4/c_budget
+ * https://github.com/jjones4/c_budget_2d_array
  *
  */
 
@@ -22,7 +24,7 @@
  * Preprocessing directives
  *
  */
-#include "c_budget_menus.h"
+#include "menus.h"
 
 
 

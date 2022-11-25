@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_crud_operations.c
+ * Name:       crud_operations.c
  *
  * Purpose:    Contains functions for adding, displaying, updating,
  *	       or removing a budget transaction.
@@ -9,10 +9,11 @@
  * Author:     jjones4
  *
  * Copyright (c) 2022 Jerad Jones
- * This file is part of c_budget.  c_budget may be freely distributed
- * under the MIT license.  For all details and documentation, see
+ * This file is part of c_budget_2d_array.  c_budget_2d_array 
+ * may be freely distributed under the MIT license.  For all 
+ * details and documentation, see
  
- * https://github.com/jjones4/c_budget
+ * https://github.com/jjones4/c_budget_2d_array
  *
  */
 
@@ -23,11 +24,11 @@
  * Preprocessing directives
  *
  */
-#include "c_budget_crud_operations.h"
+#include "crud_operations.h"
 #include "boolean.h"
-#include "c_budget_read_input.h"
-#include "c_budget_validation.h"
-#include "c_budget_menus.h"
+#include "read_input.h"
+#include "validation.h"
+#include "menus.h"
 
 char *build_transaction_string(const char *input, char *completed_transaction);
 char *parse_transaction_string(char *transaction_field, char *complete_transaction_string);
