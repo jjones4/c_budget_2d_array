@@ -147,7 +147,7 @@ int create_transaction(int *number_of_transactions, char complete_budget[MAX_TRA
    strcpy(complete_budget + *number_of_transactions * (MAX_TRANSACTION_LENGTH + 1),
       complete_transaction_string);
    
-   /* Hancy code for looping through our 2d array */
+   /* Handy code for looping through our 2d array */
    /*
    for(j = 0, i = 0; i < (*number_of_transactions + 1) * (MAX_TRANSACTION_LENGTH + 1);)
    {
@@ -392,7 +392,6 @@ int update_transaction(int *number_of_transactions, char complete_budget[MAX_TRA
    /* Rebuild the complete_transaction_string with any new data given
     * by the user
     */
-    
    strcpy(complete_transaction_string, date_string);
    strcat(complete_transaction_string, "|");
    strcat(complete_transaction_string, amount_string);
@@ -424,8 +423,11 @@ int update_transaction(int *number_of_transactions, char complete_budget[MAX_TRA
    }
    
    fclose(temp_pointer);
-   remove(FILE_NAME);
+   if(remove(FILE_NAME) == -1)
+      printf("Error removing file\n");
+
    rename(TEMP_FILE_NAME, FILE_NAME);
+   
    printf("\nRecord %d successfully updated!\n", id);
    
    return *number_of_transactions;

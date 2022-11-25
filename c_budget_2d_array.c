@@ -52,11 +52,6 @@ int main(void)
    int menu_option_to_int;
    int read_input_return_code;
    
-   /*
-    * Check for the existence of budget.txt
-    * Terminate if can't open for reading.
-    * Otherwise, open the file and get the number of transactions in it.
-    */
    fp = fopen(FILE_NAME, "r");
    if(fp == NULL)
    {
@@ -70,10 +65,8 @@ int main(void)
     * reach the max number of transactions. If we can read another transaction,
     * above the max, the file is too large, and we will exit.
     */
-   while(
-      fgets
-         (complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) != NULL
-      && number_of_transactions < MAX_TRANSACTIONS + 1)
+   while(fgets(complete_transaction_string, MAX_TRANSACTION_LENGTH + 1, fp) 
+      != NULL && number_of_transactions < MAX_TRANSACTIONS + 1)
    {
       /*
        * If we are able to read one transaction above the max, then the file
@@ -111,7 +104,7 @@ int main(void)
       {
          printf("\nThere was an error reading your input.\n\n");
          printf("Please try again.\n\n");
-         return EXIT_FAILURE;
+         continue;
       }
       
       printf("\n");
