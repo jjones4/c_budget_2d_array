@@ -11,4 +11,4 @@ To compile and link c_budget_2d_array's source files, I am using GCC and Make. Y
 
 Also, you can compile c_budget on Windows using the following command:
 
-- cl -W4 c_budget_2d_array c_budget_2d_array.c crud_operations.c menus.c read_input.c validation.c -link -out:c_budget_2d_array.exe
+- cl -W4 c_budget_2d_array.c crud_operations.c menus.c read_input.c validation.c -link -out:c_budget_2d_array.exe
